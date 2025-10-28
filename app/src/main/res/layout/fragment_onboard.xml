@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logo_1"
+        android:contentDescription="Логотип"/>
+
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Добро пожаловать в CarChat!"
+        android:textSize="24sp"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/descriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Здесь вы можете насладиться общением с интересными людьми и узнать что-то новое про машины."
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center"
+        android:paddingHorizontal="25dp"/>
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Продолжить"
+        android:layout_marginTop="32dp"/>
+</LinearLayout>
