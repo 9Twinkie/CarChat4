@@ -37,15 +37,12 @@ class HeroCardAdapter(
                 append("Culture: ${hero.culture.ifEmpty { "—"} }\n")
                 append("Born: ${hero.born.ifEmpty { "—"} }\n")
 
-                // Обработка titles
                 val titleText = hero.titles?.joinToString(", ") ?: "—"
                 append("Title: $titleText\n")
 
-                // Обработка aliases
                 val aliasText = hero.aliases?.joinToString(", ") ?: "—"
                 append("Alias: $aliasText\n")
 
-                // Обработка playedBy
                 val playedByText = hero.playedBy?.joinToString(", ") ?: "—"
                 append("Played by: $playedByText")
             }

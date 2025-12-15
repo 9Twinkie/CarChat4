@@ -8,11 +8,8 @@ data class HeroModel(
     val name: String = "Unknown",
     val culture: String = "Unknown",
     val born: String = "Unknown",
-    val titles: List<String>? = null, // ← Может быть null!
-    val aliases: List<String>? = null, // ← Может быть null!
-    val playedBy: List<String>? = null, // ← Может быть null!
+    val titles: List<String>? = null,
+    val aliases: List<String>? = null,
+    val playedBy: List<String>? = null,
     val isPlaceholder: Boolean = false
-) {
-    val id: Int
-        get() = url.substringAfterLast('/').toIntOrNull() ?: 0
-}
+)

@@ -14,7 +14,6 @@ class HeroRepository(
     suspend fun fetchHeroes(): List<HeroModel> {
         return withContext(Dispatchers.IO) {
             try {
-                // Запрашиваем первую страницу (максимум 50 на странице)
                 val allHeroes = apiService.getHeroes(pageSize = 50)
                 cache = allHeroes
                 allHeroes

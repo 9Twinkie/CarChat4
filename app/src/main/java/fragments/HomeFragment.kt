@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carchat.databinding.ButtonsNavBinding
 import com.example.carchat.databinding.FragmentHomeBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import utils.HeroCardAdapter
 import utils.HeroModel
 import utils.api.RetrofitInstance
@@ -90,29 +92,31 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun saveHeroesToFile(context: Context, heroes: List<HeroModel>): File? {
-        val fileName = "heroes.txt"
-        val file = File(context.filesDir, fileName) // ← Запись во внутреннее хранилище
-        try {
-            FileOutputStream(file).use { fos ->
-                heroes.forEach { hero ->
-                    val info = """
-                        Name: ${hero.name}
-                        Culture: ${hero.culture}
-                        Born: ${hero.born}
-                        Titles: ${hero.titles?.joinToString(", ") ?: "—"}
-                        Aliases: ${hero.aliases?.joinToString(", ") ?: "—"}
-                        Played By: ${hero.playedBy?.joinToString(", ") ?: "—"}
-                        
-                        """.trimIndent()
-                    fos.write(info.toByteArray())
-                    fos.write("\n".toByteArray())
+    private suspend fun saveHeroesToFile(context: Context, heroes: List<HeroModel>): File? {
+        return withContext(Dispatchers.IO) {
+            val fileName = "21.txt"
+            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
+            try {
+                FileOutputStream(file).use { fos ->
+                    heroes.forEach { hero ->
+                        val info = """
+                            Name: ${hero.name}
+                            Culture: ${hero.culture}
+                            Born: ${hero.born}
+                            Titles: ${hero.titles?.joinToString(", ") ?: "—"}
+                            Aliases: ${hero.aliases?.joinToString(", ") ?: "—"}
+                            Played By: ${hero.playedBy?.joinToString(", ") ?: "—"}
+                            
+                            """.trimIndent()
+                        fos.write(info.toByteArray())
+                        fos.write("\n".toByteArray())
+                    }
                 }
+                file
+            } catch (e: IOException) {
+                e.printStackTrace()
+                null
             }
-            return file
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return null
         }
     }
 
