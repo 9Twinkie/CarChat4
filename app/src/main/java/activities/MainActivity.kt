@@ -1,9 +1,10 @@
-package com.example.carchat
+package activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.carchat.R
 
 class MainActivity : AppCompatActivity() {
 

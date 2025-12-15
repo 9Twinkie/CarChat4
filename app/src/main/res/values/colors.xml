@@ -7,13 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#6200EE</color> <!-- Это пример, замените на нужный вам цвет -->
-    <color name="primaryVariant">#3700B3</color>
-    <color name="secondary">#03DAC5</color>
-    <color name="green">#39E639</color>
-    <color name="blue">#2A17B1</color>
-    <color name="dark_gray">#1D1E22</color>
-    <color name="dark_blue">#0B1C42</color>
-    <color name="light_gray">#AEAFB2</color>
-    <color name="red">#FF0000</color>
+    <color name="blue">#468fbd</color>
+    <color name="colorPrimary">#6200EE</color> <!-- Example color -->
+    <color name="colorPrimaryDark">#3700B3</color> <!-- Example color -->
+    <color name="colorAccent">#03DAC5</color> <!-- Example color -->
 </resources>

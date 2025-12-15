@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_function1"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="2dp"
+        android:text="@string/options"
+        android:textSize="13sp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_function2"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="2dp"
+        android:text="@string/swipes"
+        android:textSize="13sp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_function3"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="2dp"
+        android:text="@string/likes"
+        android:textSize="13sp"/>
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.carchat
+package fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,15 +18,14 @@ class OnboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOnboardBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+        val view = binding.root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.continueButton.setOnClickListener {
-            findNavController().navigate(R.id.action_OnboardToSignIn)
+        binding.nextButton.setOnClickListener {
+            val action = OnboardFragmentDirections.actionOnboardFragmentToSignInFragment(null)
+            findNavController().navigate(action)
         }
+
+        return view
     }
 
     override fun onDestroyView() {

@@ -32,7 +32,7 @@
         android:paddingHorizontal="25dp"/>
 
     <Button
-        android:id="@+id/continueButton"
+        android:id="@+id/nextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Продолжить"
