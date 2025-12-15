@@ -3,10 +3,8 @@ package utils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.carchat.R
 
 class HeroCardAdapter(
@@ -22,7 +20,7 @@ class HeroCardAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_HERO) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.hero_card, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.hero_card_text_only, parent, false)
             HeroViewHolder(view)
         } else {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.no_more_card, parent, false)
@@ -33,15 +31,30 @@ class HeroCardAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is HeroViewHolder) {
             val hero = heroes[position]
-            holder.userName.text = hero.firstName
-            holder.userDescription.text = hero.lastName
-            Glide.with(holder.itemView.context).load(hero.imageUrl).into(holder.userImage)
+            holder.name.text = hero.name.ifEmpty { "Unknown" }
+
+            val details = buildString {
+                append("Culture: ${hero.culture.ifEmpty { "—"} }\n")
+                append("Born: ${hero.born.ifEmpty { "—"} }\n")
+
+                // Обработка titles
+                val titleText = hero.titles?.joinToString(", ") ?: "—"
+                append("Title: $titleText\n")
+
+                // Обработка aliases
+                val aliasText = hero.aliases?.joinToString(", ") ?: "—"
+                append("Alias: $aliasText\n")
+
+                // Обработка playedBy
+                val playedByText = hero.playedBy?.joinToString(", ") ?: "—"
+                append("Played by: $playedByText")
+            }
+            holder.details.text = details
         }
     }
 
-    override fun getItemCount(): Int {
-        return heroes.size
-    }
+
+    override fun getItemCount(): Int = heroes.size
 
     fun removeHeroAt(position: Int) {
         if (position < heroes.size) {
@@ -53,20 +66,19 @@ class HeroCardAdapter(
 
     fun ensurePlaceholder() {
         if (heroes.isEmpty() || !heroes.last().isPlaceholder) {
-            heroes.add(HeroModel(0, "", "", "", "", "", "", "", true))
+            heroes.add(HeroModel("", isPlaceholder = true))
             notifyItemInserted(heroes.size - 1)
         }
     }
 
-    fun getHeroAt(position: Int): HeroModel {
-        return heroes[position]
-    }
+    fun getHeroAt(position: Int): HeroModel = heroes[position]
 
     class HeroViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val userName: TextView = view.findViewById(R.id.hero_name)
-        val userDescription: TextView = view.findViewById(R.id.hero_last_name)
-        val userImage: ImageView = view.findViewById(R.id.hero_image)
+        val name: TextView = view.findViewById(R.id.hero_name)
+        val details: TextView = view.findViewById(R.id.hero_details)
     }
+
+
 
     class NoMoreCardsViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

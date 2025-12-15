@@ -4,14 +4,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class HeroModel(
-    val id: Int,
-    val firstName: String,
-    val lastName: String,
-    val fullName: String,
-    val title: String,
-    val family: String,
-    val image: String,
-    val imageUrl: String,
+    val url: String,
+    val name: String = "Unknown",
+    val culture: String = "Unknown",
+    val born: String = "Unknown",
+    val titles: List<String>? = null, // ← Может быть null!
+    val aliases: List<String>? = null, // ← Может быть null!
+    val playedBy: List<String>? = null, // ← Может быть null!
     val isPlaceholder: Boolean = false
-)
-
+) {
+    val id: Int
+        get() = url.substringAfterLast('/').toIntOrNull() ?: 0
+}

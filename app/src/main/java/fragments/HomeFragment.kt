@@ -10,20 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carchat.databinding.ButtonsNavBinding
 import com.example.carchat.databinding.FragmentHomeBinding
 import kotlinx.coroutines.launch
 import utils.HeroCardAdapter
 import utils.HeroModel
-import utils.StackLayoutManager
 import utils.api.RetrofitInstance
 import android.content.Context
 import android.os.Environment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-
 
 class HomeFragment : Fragment() {
 
@@ -36,7 +35,7 @@ class HomeFragment : Fragment() {
         val remainingHeroes = mutableListOf<HeroModel>()
     }
 
-    private lateinit var heroCardAdapter: HeroCardAdapter
+    private var heroCardAdapter: HeroCardAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,38 +64,49 @@ class HomeFragment : Fragment() {
             try {
                 if (remainingHeroes.isEmpty()) {
                     val repository = RetrofitInstance.repository
-
+                    Log.d("HomeFragment", "Запрос к API...")
                     val heroes = repository.fetchHeroes()
+                    Log.d("HomeFragment", "Получено: ${heroes.size} героев")
+
                     remainingHeroes.addAll(heroes)
 
                     val file = saveHeroesToFile(requireContext(), heroes)
                     if (file != null) {
-                        Toast.makeText(requireContext(), "Heroes saved to ${file.absolutePath}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Сохранено: ${file.absolutePath}", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(requireContext(), "Failed to save heroes", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Ошибка сохранения", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 heroCardAdapter = HeroCardAdapter(remainingHeroes)
                 binding.recyclerView.adapter = heroCardAdapter
-                binding.recyclerView.layoutManager = StackLayoutManager(requireContext())
-                heroCardAdapter.ensurePlaceholder()
+                binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                heroCardAdapter?.ensurePlaceholder()
+
             } catch (e: Exception) {
-                Log.e("HomeFragment", "Error: ${e.message}")
+                Log.e("HomeFragment", "Ошибка: ${e.message}", e)
                 Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-
     private fun saveHeroesToFile(context: Context, heroes: List<HeroModel>): File? {
         val fileName = "heroes.txt"
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
-
+        val file = File(context.filesDir, fileName) // ← Запись во внутреннее хранилище
         try {
             FileOutputStream(file).use { fos ->
                 heroes.forEach { hero ->
-                    fos.write("${hero.firstName} ${hero.lastName}\n".toByteArray())
+                    val info = """
+                        Name: ${hero.name}
+                        Culture: ${hero.culture}
+                        Born: ${hero.born}
+                        Titles: ${hero.titles?.joinToString(", ") ?: "—"}
+                        Aliases: ${hero.aliases?.joinToString(", ") ?: "—"}
+                        Played By: ${hero.playedBy?.joinToString(", ") ?: "—"}
+                        
+                        """.trimIndent()
+                    fos.write(info.toByteArray())
+                    fos.write("\n".toByteArray())
                 }
             }
             return file
@@ -108,49 +118,29 @@ class HomeFragment : Fragment() {
 
     private fun setupSwipeGesture() {
         val swipeHandler = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val hero = heroCardAdapter.getHeroAt(position)
-
+                val pos = viewHolder.bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    val hero = heroCardAdapter?.getHeroAt(pos) ?: return
                     if (hero.isPlaceholder) {
-                        heroCardAdapter.notifyItemChanged(position)
+                        heroCardAdapter?.notifyItemChanged(pos)
                         return
                     }
-
                     if (direction == ItemTouchHelper.RIGHT) {
-                        likeHero(hero)
-                    } else if (direction == ItemTouchHelper.LEFT) {
-                        dislikeHero(hero)
+                        likedHeroes.add(hero)
+                        Toast.makeText(requireContext(), "Liked ${hero.name}", Toast.LENGTH_SHORT).show()
+                    } else {
+                        dislikedHeroes.add(hero)
+                        Toast.makeText(requireContext(), "Disliked ${hero.name}", Toast.LENGTH_SHORT).show()
                     }
-
-                    heroCardAdapter.removeHeroAt(position)
+                    heroCardAdapter?.removeHeroAt(pos)
                     remainingHeroes.remove(hero)
                 }
             }
         }
-
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
-    }
-
-    private fun likeHero(hero: HeroModel) {
-        likedHeroes.add(hero)
-        Toast.makeText(requireContext(), "Liked ${hero.firstName}", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun dislikeHero(hero: HeroModel) {
-        dislikedHeroes.add(hero)
-        Toast.makeText(requireContext(), "Disliked ${hero.firstName}", Toast.LENGTH_SHORT).show()
+        ItemTouchHelper(swipeHandler).attachToRecyclerView(binding.recyclerView)
     }
 
     override fun onDestroyView() {
