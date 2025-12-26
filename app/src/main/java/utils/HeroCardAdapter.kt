@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.carchat.R
 
 class HeroCardAdapter(
-    private var heroes: MutableList<HeroModel>
+    var heroes: MutableList<HeroModel>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_HERO = 1

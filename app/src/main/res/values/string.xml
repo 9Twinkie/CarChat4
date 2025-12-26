@@ -27,5 +27,5 @@
     <string name="backup_file_exists">Backup file exists</string>
     <string name="backup_file_does_not_exist">Backup file does not exist</string>
     <string name="restore_file">Restore File</string>
-
+    <string name="refresh">Refresh</string>
 </resources>

@@ -31,7 +31,7 @@ class RatedHeroesButtonsFragment : Fragment() {
         navBinding.buttonFunction1.setOnClickListener {
             findNavController().navigate(RatedHeroesButtonsFragmentDirections.actionRatedHeroesButtonsFragmentToSettingsFragment())
         }
-        navBinding.buttonFunction2.setOnClickListener {
+        navBinding.buttonRefresh.setOnClickListener {
             findNavController().navigate(RatedHeroesButtonsFragmentDirections.actionRatedHeroesButtonsFragmentToHomeFragment())
         }
     }

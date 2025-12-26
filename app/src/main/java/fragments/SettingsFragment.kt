@@ -229,7 +229,7 @@ class SettingsFragment : Fragment() {
 
     private fun setupNavigation() {
         val navBinding = ButtonsNavBinding.bind(binding.root)
-        navBinding.buttonFunction2.setOnClickListener {
+        navBinding.buttonRefresh.setOnClickListener {
             if (isAdded) {
                 findNavController().navigate(SettingsFragmentDirections.actionFirstFunctionFragmentToHomeFragment())
             }
